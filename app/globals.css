@@ -725,7 +725,8 @@ body {
 .weather-icon .anim-fall,
 .weather-icon .anim-drift,
 .weather-icon .anim-float,
-.weather-icon .anim-flash {
+.weather-icon .anim-flash,
+.weather-icon .anim-fog {
   animation-play-state: paused;
 }
 
@@ -758,6 +759,11 @@ body {
   90%, 94%               { opacity: 0.15; }
 }
 
+@keyframes weather-fog {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 0.8; }
+}
+
 /* ── Animation classes ── */
 .weather-icon .anim-spin {
   animation: weather-spin 20s linear infinite;
@@ -788,6 +794,10 @@ body {
   animation: weather-flash 4s infinite;
 }
 
+.weather-icon .anim-fog {
+  animation: weather-fog 3s ease-in-out infinite;
+}
+
 /* ═══════════════════════════════════════════════════════════════
    Calendar Day Hover — Reveal weather + multiplier
    ═══════════════════════════════════════════════════════════════ */
@@ -813,7 +823,8 @@ body {
   .calendar-day:not(.empty):hover .weather-icon .anim-fall,
   .calendar-day:not(.empty):hover .weather-icon .anim-drift,
   .calendar-day:not(.empty):hover .weather-icon .anim-float,
-  .calendar-day:not(.empty):hover .weather-icon .anim-flash {
+  .calendar-day:not(.empty):hover .weather-icon .anim-flash,
+  .calendar-day:not(.empty):hover .weather-icon .anim-fog {
     animation-play-state: running;
   }
 }

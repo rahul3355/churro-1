@@ -118,7 +118,7 @@ function CloudFogIcon() {
         className="anim-drift"
         d="M6 16 Q6 10 12 10 Q14 6 20 8 Q26 4 28 10 Q32 10 32 14 Q32 18 28 18 L8 18 Q6 18 6 16Z"
       />
-      <g className="anim-flash">
+      <g className="anim-fog">
         <line x1="8" y1="22" x2="22" y2="22" />
         <line x1="11" y1="25" x2="25" y2="25" />
         <line x1="14" y1="28" x2="20" y2="28" />
