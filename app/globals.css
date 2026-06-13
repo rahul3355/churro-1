@@ -835,8 +835,40 @@ body {
   line-height: var(--text-caption-line);
   color: var(--mute);
   text-transform: lowercase;
-  margin-bottom: var(--space-xs);
   letter-spacing: 0;
+}
+
+.modal-disclosure {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  margin-bottom: var(--space-xs);
+  cursor: pointer;
+  color: var(--mute);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.modal-disclosure:hover {
+  color: var(--ink);
+}
+
+.modal-disclosure:hover .modal-section-title {
+  color: var(--ink);
+}
+
+.disclosure-arrow {
+  display: flex;
+  align-items: center;
+  transition: transform var(--duration-normal) var(--ease-out);
+  color: inherit;
+}
+
+.disclosure-arrow.open {
+  transform: rotate(180deg);
 }
 
 .factors-list {

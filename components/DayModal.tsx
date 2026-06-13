@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import type { DayScore } from '../lib/types';
 
 const WEEKDAYS = [
@@ -25,6 +25,7 @@ export default function DayModal({
   const isoDate = score.date;
 
   const levelClass = score.level.toLowerCase();
+  const [breakdownOpen, setBreakdownOpen] = useState(false);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -114,23 +115,36 @@ export default function DayModal({
         )}
 
         <div className="modal-section">
-          <div className="modal-section-title">score breakdown</div>
-          <ul className="factors-list">
-            {score.contributingFactors
-              .filter((f) => f.impact !== 0)
-              .map((f, i) => (
-                <li key={i}>
-                  <span className="factor-desc">{f.description}</span>
-                  <span
-                    className={`factor-impact ${
-                      f.impact > 0 ? 'positive' : f.impact < 0 ? 'negative' : 'neutral'
-                    }`}
-                  >
-                    {f.impact > 0 ? '+' : ''}{f.impact}
-                  </span>
-                </li>
-              ))}
-          </ul>
+          <button
+            className="modal-disclosure"
+            onClick={() => setBreakdownOpen(!breakdownOpen)}
+            aria-expanded={breakdownOpen}
+          >
+            <span className="modal-section-title">score breakdown</span>
+            <span className={`disclosure-arrow${breakdownOpen ? ' open' : ''}`}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </button>
+          {breakdownOpen && (
+            <ul className="factors-list">
+              {score.contributingFactors
+                .filter((f) => f.impact !== 0)
+                .map((f, i) => (
+                  <li key={i}>
+                    <span className="factor-desc">{f.description}</span>
+                    <span
+                      className={`factor-impact ${
+                        f.impact > 0 ? 'positive' : f.impact < 0 ? 'negative' : 'neutral'
+                      }`}
+                    >
+                      {f.impact > 0 ? '+' : ''}{f.impact}
+                    </span>
+                  </li>
+                ))}
+            </ul>
+          )}
         </div>
 
         <div className="modal-footer">
