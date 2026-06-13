@@ -1,13 +1,15 @@
-import type { NormalizedEvent, Holiday } from './types';
+import type { NormalizedEvent } from './types';
 import {
   resolveRecurringEvents,
   resolveAnnualEvents,
   getHolidaysForDate,
   getWeekdayMultiplier,
   getTourismMultiplier,
+  loadVenues,
 } from './dataLoader';
-import { computeCrowdScore, computeScoresForDateRange } from './scoring';
+import { computeCrowdScore } from './scoring';
 import { fetchWeather } from './weather';
+import { fetchTicketmasterEvents } from './ticketmaster';
 import { getCached, setCache, getCacheKey } from './cache';
 import type { DayScore, Location } from './types';
 
@@ -40,6 +42,19 @@ export async function generateCalendar(
 
   const allAnnualEvents = [...annualEventsThisYear, ...annualEventsNextYear];
 
+  // Fetch Ticketmaster events (cached)
+  const startStr = startDate.toISOString().split('T')[0];
+  const endStr = endDate.toISOString().split('T')[0];
+  const ticketmasterEvents = await fetchTicketmasterEvents(
+    location.latitude,
+    location.longitude,
+    location.radiusKm,
+    startStr,
+    endStr
+  );
+
+  const venues = loadVenues();
+
   const dateRangeEvents: Record<string, NormalizedEvent[]> = {};
   const current = new Date(startDate);
   while (current <= endDate) {
@@ -53,6 +68,10 @@ export async function generateCalendar(
     // Annual events for this date
     const annual = allAnnualEvents.filter((e) => e.date === dateStr);
     dateRangeEvents[dateStr].push(...annual);
+
+    // Ticketmaster events for this date
+    const tmEvents = ticketmasterEvents.filter((e) => e.date === dateStr);
+    dateRangeEvents[dateStr].push(...tmEvents);
 
     current.setDate(current.getDate() + 1);
   }
@@ -84,7 +103,7 @@ export async function generateCalendar(
       holidays,
       tourismMultiplier: tourismMult,
       weekdayMultiplier: weekdayMult,
-      venues: [],
+      venues,
     });
 
     scores.push(score);
