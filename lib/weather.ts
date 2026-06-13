@@ -12,13 +12,36 @@ interface OpenMeteoResponse {
   };
 }
 
+const MAX_FORECAST_DAYS = 15;
+const MAX_PAST_DAYS = 92;
+
+function clampForecastRange(startDate: string, endDate: string): { startDate: string; endDate: string } | null {
+  const now = new Date();
+  const maxEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + MAX_FORECAST_DAYS));
+  const maxEndStr = maxEnd.toISOString().split('T')[0];
+  const minStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - MAX_PAST_DAYS));
+  const minStartStr = minStart.toISOString().split('T')[0];
+
+  if (endDate < minStartStr || startDate > maxEndStr) {
+    return null;
+  }
+
+  return {
+    startDate: startDate < minStartStr ? minStartStr : startDate,
+    endDate: endDate > maxEndStr ? maxEndStr : endDate,
+  };
+}
+
 export async function fetchWeather(
   latitude: number,
   longitude: number,
   startDate: string,
   endDate: string
 ): Promise<WeatherInfo[]> {
-  const cacheKey = getCacheKey('weather', latitude.toFixed(4), longitude.toFixed(4), startDate, endDate);
+  const range = clampForecastRange(startDate, endDate);
+  if (!range) return [];
+
+  const cacheKey = getCacheKey('weather', latitude.toFixed(4), longitude.toFixed(4), range.startDate, range.endDate);
   const cached = getCached<WeatherInfo[]>(cacheKey);
 
   if (cached && cached.length > 0) {
@@ -31,8 +54,8 @@ export async function fetchWeather(
     url.searchParams.set('longitude', String(longitude));
     url.searchParams.set('daily', 'weather_code,temperature_2m_max');
     url.searchParams.set('timezone', 'Europe/London');
-    url.searchParams.set('start_date', startDate);
-    url.searchParams.set('end_date', endDate);
+    url.searchParams.set('start_date', range.startDate);
+    url.searchParams.set('end_date', range.endDate);
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10000);

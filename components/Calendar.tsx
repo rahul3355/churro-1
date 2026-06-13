@@ -60,7 +60,7 @@ export default function Calendar({ location, refreshKey }: CalendarProps) {
   const loadMonth = useCallback(async (month: number, year: number) => {
     setLoading(true);
     try {
-      const firstOfMonth = new Date(year, month, 1);
+      const firstOfMonth = new Date(Date.UTC(year, month, 1));
       const startStr = firstOfMonth.toISOString().split('T')[0];
 
       const cacheKey = getCacheKey(

@@ -135,6 +135,15 @@ describe('Weather API', () => {
     });
   });
 
+  test('returns empty array when entire date range is outside forecast window', async () => {
+    globalThis.fetch = jest.fn();
+
+    const weather = await fetchWeather(53.3934, -2.9851, '2026-12-01', '2026-12-30');
+
+    expect(weather).toEqual([]);
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
   test('returns empty array on non-ok API response', async () => {
     const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
@@ -168,12 +177,27 @@ describe('Weather API', () => {
   test('uses start_date and end_date to request specific date range', async () => {
     mockFetchSuccess();
 
-    await fetchWeather(53.3934, -2.9851, '2026-06-01', '2026-06-30');
+    await fetchWeather(53.3934, -2.9851, '2026-06-01', '2026-06-16');
 
     const url = (globalThis.fetch as jest.Mock).mock.calls[0][0] as string;
     expect(url).toContain('start_date=2026-06-01');
-    expect(url).toContain('end_date=2026-06-30');
+    expect(url).toContain('end_date=2026-06-16');
     expect(url).not.toContain('forecast_days');
+  });
+
+  test('clamps date range to Open-Meteo 15-day forecast limit', async () => {
+    mockFetchSuccess();
+
+    await fetchWeather(53.3934, -2.9851, '2026-06-01', '2026-07-15');
+
+    const url = (globalThis.fetch as jest.Mock).mock.calls[0][0] as string;
+    expect(url).toContain('start_date=2026-06-01');
+
+    const now = new Date();
+    const maxEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 15));
+    const maxEndStr = maxEnd.toISOString().split('T')[0];
+    expect(url).toContain(`end_date=${maxEndStr}`);
+    expect(url).not.toContain('end_date=2026-07-15');
   });
 
   test('returns empty array when API response has no daily field', async () => {

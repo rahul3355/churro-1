@@ -122,24 +122,44 @@ function estimateAttendance(
   return { raw, churroEffective: Math.round(raw * churroWeight) };
 }
 
+const MAX_FORECAST_DAYS = 15;
+const MAX_PAST_DAYS = 92;
+
+function clampForecastRange(startDate: string, endDate: string): { startDate: string; endDate: string } | null {
+  const now = new Date();
+  const maxEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + MAX_FORECAST_DAYS));
+  const maxEndStr = maxEnd.toISOString().split('T')[0];
+  const minStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - MAX_PAST_DAYS));
+  const minStartStr = minStart.toISOString().split('T')[0];
+
+  if (endDate < minStartStr || startDate > maxEndStr) {
+    return null;
+  }
+
+  return {
+    startDate: startDate < minStartStr ? minStartStr : startDate,
+    endDate: endDate > maxEndStr ? maxEndStr : endDate,
+  };
+}
+
 async function fetchWeatherServer(
   latitude: number,
   longitude: number,
   startDate: string,
   endDate: string
 ): Promise<WeatherInfo[]> {
+  const range = clampForecastRange(startDate, endDate);
+  if (!range) return [];
+
   const url = new URL('https://api.open-meteo.com/v1/forecast');
   url.searchParams.set('latitude', String(latitude));
   url.searchParams.set('longitude', String(longitude));
   url.searchParams.set('daily', 'weather_code,temperature_2m_max');
   url.searchParams.set('timezone', 'Europe/London');
-  url.searchParams.set('start_date', startDate);
-  url.searchParams.set('end_date', endDate);
+  url.searchParams.set('start_date', range.startDate);
+  url.searchParams.set('end_date', range.endDate);
 
-  // Edge-cached: 3 hour TTL, shared across all users
-  const res = await fetch(url.toString(), {
-    next: { revalidate: 10800 },
-  });
+  const res = await fetch(url.toString());
 
   if (!res.ok) {
     console.warn('Open-Meteo API returned', res.status);
