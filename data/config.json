@@ -1,0 +1,12 @@
+{
+  "meta": {
+    "defaultLocation": {
+      "name": "Liverpool City Centre",
+      "latitude": 53.4084,
+      "longitude": -2.9916,
+      "radiusKm": 5
+    },
+    "application": "Population Surge Calendar",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "multipliers": {
+    "monday": 0.75,
+    "tuesday": 0.80,
+    "wednesday": 0.85,
+    "thursday": 0.95,
+    "friday": 1.20,
+    "saturday": 1.50,
+    "sunday": 1.25
+  },
+  "_meta": {
+    "source": "UK high street footfall data and retail industry patterns",
+    "lastUpdated": "2025-06-13",
+    "notes": "Based on typical UK footfall patterns: weekends see 25-50% higher footfall. Friday afternoons/evenings see a 20% uplift. Early week (Mon-Wed) has lower activity."
+  }
+}

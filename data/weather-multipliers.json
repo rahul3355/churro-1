@@ -1,0 +1,46 @@
+{
+  "multipliers": {
+    "sunny": 1.15,
+    "clear": 1.15,
+    "partly-cloudy": 1.08,
+    "cloudy": 1.00,
+    "overcast": 0.95,
+    "light-rain": 0.82,
+    "drizzle": 0.85,
+    "rain": 0.72,
+    "heavy-rain": 0.58,
+    "storm": 0.40,
+    "thunderstorm": 0.40,
+    "snow": 0.55,
+    "fog": 0.90,
+    "windy": 0.88
+  },
+  "weatherCodeMap": {
+    "0": "clear",
+    "1": "partly-cloudy",
+    "2": "partly-cloudy",
+    "3": "overcast",
+    "45": "fog",
+    "48": "fog",
+    "51": "drizzle",
+    "53": "drizzle",
+    "55": "drizzle",
+    "61": "rain",
+    "63": "rain",
+    "65": "heavy-rain",
+    "71": "snow",
+    "73": "snow",
+    "75": "snow",
+    "80": "rain",
+    "81": "rain",
+    "82": "heavy-rain",
+    "95": "storm",
+    "96": "thunderstorm",
+    "99": "thunderstorm"
+  },
+  "_meta": {
+    "source": "Evidence-based assumptions on weather impact on outdoor activity and crowds",
+    "lastUpdated": "2025-06-13",
+    "notes": "Weather codes map to Open-Meteo WMO codes. Multipliers based on: sunny weather draws people outdoors (+15%), heavy rain deters attendance (-42%), storms severely limit outdoor activity (-60%). Derived from UK tourism footfall studies and common sense."
+  }
+}
