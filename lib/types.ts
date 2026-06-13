@@ -73,6 +73,7 @@ export interface WeatherInfo {
   temperature: number;
   weatherCode: number;
   multiplier: number;
+  icon: string;
 }
 
 export interface WeatherMultipliers {

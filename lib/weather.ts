@@ -41,6 +41,7 @@ export async function fetchWeather(
         temperature: Math.round(data.daily.temperature_2m_max[i]),
         weatherCode: code,
         multiplier: getWeatherMultiplier(code),
+        icon: getIconFromCode(code),
       });
     }
 
@@ -77,4 +78,31 @@ function getConditionFromCode(code: number): string {
     99: 'Severe Thunderstorm',
   };
   return conditions[code] || `Code ${code}`;
+}
+
+function getIconFromCode(code: number): string {
+  const icons: Record<number, string> = {
+    0: 'sun',
+    1: 'cloud-sun',
+    2: 'cloud-sun',
+    3: 'cloud',
+    45: 'cloud-fog',
+    48: 'cloud-fog',
+    51: 'cloud-drizzle',
+    53: 'cloud-drizzle',
+    55: 'cloud-drizzle',
+    61: 'cloud-rain',
+    63: 'cloud-rain',
+    65: 'cloud-rain',
+    71: 'cloud-snow',
+    73: 'cloud-snow',
+    75: 'cloud-snow',
+    80: 'cloud-rain',
+    81: 'cloud-rain',
+    82: 'cloud-rain',
+    95: 'cloud-lightning',
+    96: 'cloud-lightning',
+    99: 'cloud-lightning',
+  };
+  return icons[code] || 'cloud';
 }

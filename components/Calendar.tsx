@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { CalendarResult } from '../lib/calendar';
+import type { DayScore } from '../lib/types';
 import DayModal from './DayModal';
+import WeatherIcon from './WeatherIcon';
 
 const DAY_NAMES = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const MONTH_NAMES = [
@@ -10,8 +12,43 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
 
+function getTopMultiplier(score: DayScore): {
+  label: string;
+  impact: number;
+  variant: 'high' | 'mid' | 'low' | 'neg';
+} | null {
+  const factors = score.contributingFactors.filter((f) => f.impact !== 0);
+  if (!factors.length) return null;
+
+  let top = factors[0];
+  for (let i = 1; i < factors.length; i++) {
+    if (Math.abs(factors[i].impact) > Math.abs(top.impact)) {
+      top = factors[i];
+    }
+  }
+
+  const abs = Math.abs(top.impact);
+  let variant: 'high' | 'mid' | 'low' | 'neg';
+  if (abs >= 15) variant = 'high';
+  else if (abs >= 8) variant = 'mid';
+  else if (top.impact > 0) variant = 'low';
+  else variant = 'neg';
+
+  return {
+    label:
+      top.name.length > 14 ? top.name.slice(0, 13) + '\u2026' : top.name,
+    impact: top.impact,
+    variant,
+  };
+}
+
 export default function Calendar({ data }: { data: CalendarResult }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const multipliers = useMemo(
+    () => data?.scores?.map((s) => getTopMultiplier(s)) ?? [],
+    [data]
+  );
 
   if (!data?.scores?.length) {
     return <div className="error-message">No calendar data available</div>;
@@ -54,6 +91,7 @@ export default function Calendar({ data }: { data: CalendarResult }) {
             const d = new Date(score.date + 'T00:00:00');
             const dayNum = d.getDate();
             const isToday = new Date().toISOString().split('T')[0] === score.date;
+            const mult = multipliers[i];
 
             return (
               <div
@@ -66,21 +104,29 @@ export default function Calendar({ data }: { data: CalendarResult }) {
                 onKeyDown={(e) => handleKeyDown(e, i)}
               >
                 {isToday && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: 2,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: 4,
-                      height: 4,
-                      borderRadius: '50%',
-                      background: 'var(--primary)',
-                    }}
-                  />
+                  <span className="today-dot" />
                 )}
-                <span className="day-num">{dayNum}</span>
-                <span className="day-score">{score.score}</span>
+
+                <span className="cell-main">
+                  <span className="day-num">{dayNum}</span>
+                  <span className="day-score">{score.score}</span>
+                </span>
+
+                {score.weather && (
+                  <span className="cell-weather-row">
+                    <WeatherIcon code={score.weather.weatherCode} size={16} />
+                    <span className="cell-temp">{score.weather.temperature}&deg;</span>
+                  </span>
+                )}
+
+                {mult && (
+                  <span className={`cell-multiplier-row variant-${mult.variant}`}>
+                    <span className="cell-mult-label">{mult.label}</span>
+                    <span className="cell-mult-value">
+                      {mult.impact > 0 ? '+' : ''}{mult.impact}
+                    </span>
+                  </span>
+                )}
               </div>
             );
           })}
