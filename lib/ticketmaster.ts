@@ -78,7 +78,7 @@ function normalizeEvent(event: TMEvent): NormalizedEvent {
   const lat = venue?.location?.latitude ? parseFloat(venue.location.latitude) : null;
   const lng = venue?.location?.longitude ? parseFloat(venue.location.longitude) : null;
 
-  const estimatedAttendance = estimateAttendance(venue, classification);
+  const est = estimateAttendance(venue, classification);
 
   return {
     id: 'tm-' + event.id,
@@ -88,7 +88,7 @@ function normalizeEvent(event: TMEvent): NormalizedEvent {
     category,
     latitude: lat,
     longitude: lng,
-    estimatedAttendance,
+    estimatedAttendance: est.churroEffective,
     source: 'ticketmaster',
   };
 }
@@ -96,28 +96,42 @@ function normalizeEvent(event: TMEvent): NormalizedEvent {
 function estimateAttendance(
   venue?: TMVenue,
   classification?: TMClassification
-): number {
+): { raw: number; churroEffective: number } {
   const venueName = venue?.name?.toLowerCase() || '';
   const segment = classification?.segment?.name?.toLowerCase() || '';
 
-  if (venueName.includes('anfield')) return 54000;
-  if (venueName.includes('goodison')) return 39000;
-  if (venueName.includes('m&s bank arena') || venueName.includes('echo arena')) return 10000;
-  if (venueName.includes('pier head')) return 20000;
-  if (venueName.includes('cavern')) return 300;
-  if (venueName.includes('o2 academy') && venueName.includes('liverpool')) return 1000;
-  if (venueName.includes('empire theatre') || venueName.includes('empire theater')) return 2000;
-  if (venueName.includes('philharmonic')) return 1500;
-  if (venueName.includes('camp and furnace') || venueName.includes('camp & furnace')) return 700;
-  if (venueName.includes('arena')) return 8000;
-  if (venueName.includes('stadium')) return 40000;
-  if (venueName.includes('theatre') || venueName.includes('theater')) return 1000;
-  if (venueName.includes('club')) return 400;
+  // Raw attendance (same heuristic as before)
+  let raw = 1500;
+  if (venueName.includes('anfield')) raw = 54000;
+  else if (venueName.includes('goodison')) raw = 39000;
+  else if (venueName.includes('baltic market')) raw = 2000;
+  else if (venueName.includes('camp and furnace') || venueName.includes('camp & furnace')) raw = 800;
+  else if (venueName.includes('m&s bank arena') || venueName.includes('echo arena')) raw = 10000;
+  else if (venueName.includes('pier head')) raw = 20000;
+  else if (venueName.includes('cavern')) raw = 300;
+  else if (venueName.includes('o2 academy') && venueName.includes('liverpool')) raw = 1000;
+  else if (venueName.includes('empire theatre') || venueName.includes('empire theater')) raw = 2000;
+  else if (venueName.includes('philharmonic')) raw = 1500;
+  else if (venueName.includes('arena')) raw = 8000;
+  else if (venueName.includes('stadium')) raw = 40000;
+  else if (venueName.includes('theatre') || venueName.includes('theater')) raw = 1000;
+  else if (venueName.includes('club')) raw = 400;
+  else if (segment === 'sports') raw = 15000;
+  else if (segment === 'music') raw = 3000;
 
-  if (segment === 'sports') return 15000;
-  if (segment === 'music') return 3000;
+  // Churro conversion weight by venue proximity to Baltic Market
+  let churroWeight = 0.05;
+  if (venueName.includes('baltic market')) churroWeight = 1.00;
+  else if (venueName.includes('camp and furnace') || venueName.includes('camp & furnace')) churroWeight = 0.90;
+  else if (venueName.includes('m&s bank arena') || venueName.includes('echo arena')) churroWeight = 0.08;
+  else if (venueName.includes('albert dock')) churroWeight = 0.05;
+  else if (venueName.includes('liverpool one')) churroWeight = 0.03;
+  else if (venueName.includes('pier head')) churroWeight = 0.03;
+  else if (venueName.includes('o2 academy') && venueName.includes('liverpool')) churroWeight = 0.06;
+  else if (venueName.includes('cavern')) churroWeight = 0.04;
+  else if (venueName.includes('anfield') || venueName.includes('goodison') || venueName.includes('aintree')) churroWeight = 0.005;
 
-  return 1500;
+  return { raw, churroEffective: Math.round(raw * churroWeight) };
 }
 
 export async function fetchTicketmasterEvents(

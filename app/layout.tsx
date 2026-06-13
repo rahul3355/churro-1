@@ -17,8 +17,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Population Surge Calendar — Liverpool',
-  description: 'Predict crowd density for the next 30 days around Liverpool',
+  title: 'Demand Surge Calendar — Baltic Market Liverpool',
+  description: 'Predict daily demand at Baltic Market, Liverpool.',
+  icons: {
+    icon: '/churro-image.svg',
+    shortcut: '/churro-image.svg',
+    apple: '/churro-image.svg',
+  },
 };
 
 export default function RootLayout({

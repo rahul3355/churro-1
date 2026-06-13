@@ -13,6 +13,7 @@ import {
   resolveRecurringEvents,
   resolveAnnualEvents,
   getHolidaysForDate,
+  isClosedDay,
 } from '../lib/dataLoader';
 
 describe('Data Loader', () => {
@@ -24,6 +25,7 @@ describe('Data Loader', () => {
     expect(venues[0]).toHaveProperty('latitude');
     expect(venues[0]).toHaveProperty('longitude');
     expect(venues[0]).toHaveProperty('capacity');
+    expect(venues[0]).toHaveProperty('churroWeight');
   });
 
   test('loads holidays dataset', () => {
@@ -38,6 +40,7 @@ describe('Data Loader', () => {
     const events = loadRecurringEvents();
     expect(events.length).toBeGreaterThan(0);
     expect(events[0]).toHaveProperty('recurrenceRule');
+    expect(events[0]).toHaveProperty('churroImpact');
   });
 
   test('loads annual events dataset', () => {
@@ -45,6 +48,8 @@ describe('Data Loader', () => {
     expect(events.length).toBeGreaterThan(0);
     expect(events[0]).toHaveProperty('month');
     expect(events[0]).toHaveProperty('impactScore');
+    expect(events[0]).toHaveProperty('churroImpact');
+    expect(events[0]).toHaveProperty('classification');
   });
 
   test('loads weather multipliers', () => {
@@ -74,6 +79,7 @@ describe('Data Loader', () => {
     expect(location).toHaveProperty('latitude');
     expect(location).toHaveProperty('longitude');
     expect(location).toHaveProperty('radiusKm');
+    expect(location.name).toBe('Baltic Market');
   });
 
   test('getWeekdayMultiplier returns valid value', () => {
@@ -88,10 +94,11 @@ describe('Data Loader', () => {
     expect(getTourismMultiplier(july)).toBeGreaterThan(getTourismMultiplier(january));
   });
 
-  test('getWeatherMultiplier maps codes', () => {
-    expect(getWeatherMultiplier(0)).toBeCloseTo(1.15); // clear
-    expect(getWeatherMultiplier(65)).toBeCloseTo(0.58); // heavy rain
-    expect(getWeatherMultiplier(999)).toBe(1.0); // unknown code
+  test('getWeatherMultiplier maps codes to churro-specific values', () => {
+    expect(getWeatherMultiplier(0)).toBeCloseTo(0.85); // clear/sunny → bad for churros
+    expect(getWeatherMultiplier(61)).toBeCloseTo(1.25); // rain → good for churros
+    expect(getWeatherMultiplier(65)).toBeCloseTo(1.00); // heavy rain → neutral
+    expect(getWeatherMultiplier(999)).toBe(1.0); // unknown code → neutral
   });
 
   test('resolveRecurringEvents returns events for a Saturday', () => {
@@ -109,7 +116,6 @@ describe('Data Loader', () => {
   test('resolveRecurringEvents returns no events for a Monday', () => {
     const monday = new Date('2025-06-16'); // Monday
     const events = resolveRecurringEvents(monday);
-    // Most recurring events are weekend-based; Monday may have few/none
     expect(Array.isArray(events)).toBe(true);
   });
 
@@ -136,5 +142,42 @@ describe('Data Loader', () => {
   test('getHolidaysForDate returns empty for non-holiday', () => {
     const regularDay = getHolidaysForDate('2025-03-15');
     expect(regularDay.length).toBe(0);
+  });
+
+  test('getHolidaysForDate returns June 2026 holidays', () => {
+    const fathersDay = getHolidaysForDate('2026-06-21');
+    expect(fathersDay.length).toBeGreaterThan(0);
+    expect(fathersDay.some(h => h.name === "Father's Day")).toBe(true);
+    expect(fathersDay.some(h => h.name === 'Summer Solstice')).toBe(true);
+  });
+
+  test('getHolidaysForDate returns Windrush Day 2026', () => {
+    const windrush = getHolidaysForDate('2026-06-22');
+    expect(windrush.length).toBeGreaterThan(0);
+    expect(windrush[0].name).toBe('Windrush Day');
+  });
+
+  test('isClosedDay returns true for Mon-Wed', () => {
+    expect(isClosedDay(new Date('2025-06-16'))).toBe(true); // Monday
+    expect(isClosedDay(new Date('2025-06-17'))).toBe(true); // Tuesday
+    expect(isClosedDay(new Date('2025-06-18'))).toBe(true); // Wednesday
+  });
+
+  test('isClosedDay returns false for Thu-Sun', () => {
+    expect(isClosedDay(new Date('2025-06-19'))).toBe(false); // Thursday
+    expect(isClosedDay(new Date('2025-06-20'))).toBe(false); // Friday
+    expect(isClosedDay(new Date('2025-06-21'))).toBe(false); // Saturday
+    expect(isClosedDay(new Date('2025-06-22'))).toBe(false); // Sunday
+  });
+
+  test('isClosedDay returns true for Christmas Day', () => {
+    expect(isClosedDay(new Date('2025-12-25'))).toBe(true);
+    expect(isClosedDay(new Date('2026-12-25'))).toBe(true);
+  });
+
+  test('St Patricks Day 2026 includes England', () => {
+    const stPats = getHolidaysForDate('2026-03-17');
+    expect(stPats.length).toBeGreaterThan(0);
+    expect(stPats[0].impactScore).toBe(0.85);
   });
 });

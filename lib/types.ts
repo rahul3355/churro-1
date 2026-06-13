@@ -5,6 +5,7 @@ export interface Venue {
   longitude: number;
   capacity: number;
   venueType: string;
+  churroWeight?: number;
 }
 
 export interface Holiday {
@@ -24,6 +25,8 @@ export interface RecurringEvent {
   estimatedAttendance: number;
   impactScore: number;
   category: string;
+  churroImpact?: number;
+  classification?: string;
 }
 
 export interface AnnualEvent {
@@ -38,6 +41,8 @@ export interface AnnualEvent {
   durationDays: number;
   category: string;
   notes: string;
+  churroImpact?: number;
+  classification?: string;
 }
 
 export interface NormalizedEvent {
@@ -55,7 +60,9 @@ export interface NormalizedEvent {
 export interface DayScore {
   date: string;
   score: number;
-  level: 'Low' | 'Moderate' | 'High' | 'Extreme';
+  level: 'Closed' | 'Quiet' | 'Steady' | 'Busy' | 'Very Busy' | 'Crush';
+  confidence: number;
+  scoreRange: [number, number];
   contributingFactors: ContributingFactor[];
   weather: WeatherInfo | null;
   events: NormalizedEvent[];
@@ -69,6 +76,7 @@ export interface ContributingFactor {
 }
 
 export interface WeatherInfo {
+  date: string;
   condition: string;
   temperature: number;
   weatherCode: number;
@@ -95,6 +103,7 @@ export interface Location {
   latitude: number;
   longitude: number;
   radiusKm: number;
+  operatingDays?: number[];  // 0=Sun, 4=Thu, 5=Fri, 6=Sat for Baltic Market
 }
 
 export interface ScoreInput {

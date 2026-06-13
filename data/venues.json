@@ -1,161 +1,23 @@
 {
   "venues": [
-    {
-      "id": "anfield",
-      "name": "Anfield",
-      "latitude": 53.4308,
-      "longitude": -2.9608,
-      "capacity": 61000,
-      "venueType": "stadium"
-    },
-    {
-      "id": "goodison-park",
-      "name": "Goodison Park",
-      "latitude": 53.4388,
-      "longitude": -2.9664,
-      "capacity": 39572,
-      "venueType": "stadium"
-    },
-    {
-      "id": "ms-bank-arena",
-      "name": "M&S Bank Arena",
-      "latitude": 53.3975,
-      "longitude": -2.9917,
-      "capacity": 11000,
-      "venueType": "arena"
-    },
-    {
-      "id": "pier-head",
-      "name": "Pier Head",
-      "latitude": 53.4058,
-      "longitude": -2.9972,
-      "capacity": 50000,
-      "venueType": "outdoor"
-    },
-    {
-      "id": "cavern-club",
-      "name": "Cavern Club",
-      "latitude": 53.4061,
-      "longitude": -2.9875,
-      "capacity": 350,
-      "venueType": "music-venue"
-    },
-    {
-      "id": "o2-academy-liverpool",
-      "name": "O2 Academy Liverpool",
-      "latitude": 53.4030,
-      "longitude": -2.9785,
-      "capacity": 1200,
-      "venueType": "music-venue"
-    },
-    {
-      "id": "liverpool-empire-theatre",
-      "name": "Liverpool Empire Theatre",
-      "latitude": 53.4089,
-      "longitude": -2.9783,
-      "capacity": 2348,
-      "venueType": "theatre"
-    },
-    {
-      "id": "royal-albert-dock",
-      "name": "Royal Albert Dock",
-      "latitude": 53.4016,
-      "longitude": -2.9931,
-      "capacity": 30000,
-      "venueType": "outdoor"
-    },
-    {
-      "id": "liverpool-one",
-      "name": "Liverpool ONE",
-      "latitude": 53.4036,
-      "longitude": -2.9858,
-      "capacity": 60000,
-      "venueType": "shopping"
-    },
-    {
-      "id": "aintree-racecourse",
-      "name": "Aintree Racecourse",
-      "latitude": 53.4761,
-      "longitude": -2.9399,
-      "capacity": 75000,
-      "venueType": "racecourse"
-    },
-    {
-      "id": "st-georges-hall",
-      "name": "St George's Hall",
-      "latitude": 53.4085,
-      "longitude": -2.9801,
-      "capacity": 1500,
-      "venueType": "hall"
-    },
-    {
-      "id": "echo-arena",
-      "name": "Echo Arena (ACC Liverpool)",
-      "latitude": 53.3975,
-      "longitude": -2.9917,
-      "capacity": 11000,
-      "venueType": "arena"
-    },
-    {
-      "id": "liverpool-cathedral",
-      "name": "Liverpool Cathedral",
-      "latitude": 53.3973,
-      "longitude": -2.9732,
-      "capacity": 3000,
-      "venueType": "religious"
-    },
-    {
-      "id": "liverpool-philharmonic",
-      "name": "Liverpool Philharmonic Hall",
-      "latitude": 53.4013,
-      "longitude": -2.9705,
-      "capacity": 1700,
-      "venueType": "music-venue"
-    },
-    {
-      "id": "sefton-park",
-      "name": "Sefton Park",
-      "latitude": 53.3836,
-      "longitude": -2.9345,
-      "capacity": 40000,
-      "venueType": "outdoor"
-    },
-    {
-      "id": "baltic-market",
-      "name": "Baltic Market",
-      "latitude": 53.3934,
-      "longitude": -2.9851,
-      "capacity": 2000,
-      "venueType": "market"
-    },
-    {
-      "id": "camp-and-furnace",
-      "name": "Camp and Furnace",
-      "latitude": 53.3933,
-      "longitude": -2.9857,
-      "capacity": 800,
-      "venueType": "events-space"
-    },
-    {
-      "id": "tate-liverpool",
-      "name": "Tate Liverpool",
-      "latitude": 53.4007,
-      "longitude": -2.9942,
-      "capacity": 4000,
-      "venueType": "museum"
-    },
-    {
-      "id": "museum-of-liverpool",
-      "name": "Museum of Liverpool",
-      "latitude": 53.4034,
-      "longitude": -2.9950,
-      "capacity": 5000,
-      "venueType": "museum"
-    }
+    { "id": "baltic-market", "name": "Baltic Market", "latitude": 53.3934, "longitude": -2.9851, "capacity": 2000, "venueType": "market", "churroWeight": 1.00 },
+    { "id": "camp-and-furnace", "name": "Camp and Furnace", "latitude": 53.3933, "longitude": -2.9857, "capacity": 800, "venueType": "events-space", "churroWeight": 0.95 },
+    { "id": "ms-bank-arena", "name": "M&S Bank Arena", "latitude": 53.3975, "longitude": -2.9917, "capacity": 11000, "venueType": "arena", "churroWeight": 0.55 },
+    { "id": "liverpool-cathedral", "name": "Liverpool Cathedral", "latitude": 53.3973, "longitude": -2.9732, "capacity": 3000, "venueType": "religious", "churroWeight": 0.30 },
+    { "id": "tate-liverpool", "name": "Tate Liverpool", "latitude": 53.4007, "longitude": -2.9942, "capacity": 4000, "venueType": "museum", "churroWeight": 0.38 },
+    { "id": "royal-albert-dock", "name": "Royal Albert Dock", "latitude": 53.4016, "longitude": -2.9931, "capacity": 30000, "venueType": "outdoor", "churroWeight": 0.40 },
+    { "id": "liverpool-one", "name": "Liverpool ONE", "latitude": 53.4036, "longitude": -2.9858, "capacity": 60000, "venueType": "shopping", "churroWeight": 0.35 },
+    { "id": "o2-academy-liverpool", "name": "O2 Academy Liverpool", "latitude": 53.4030, "longitude": -2.9785, "capacity": 1200, "venueType": "music-venue", "churroWeight": 0.25 },
+    { "id": "museum-of-liverpool", "name": "Museum of Liverpool", "latitude": 53.4034, "longitude": -2.9950, "capacity": 5000, "venueType": "museum", "churroWeight": 0.30 },
+    { "id": "liverpool-philharmonic", "name": "Liverpool Philharmonic Hall", "latitude": 53.4013, "longitude": -2.9705, "capacity": 1700, "venueType": "music-venue", "churroWeight": 0.22 },
+    { "id": "cavern-club", "name": "Cavern Club", "latitude": 53.4061, "longitude": -2.9875, "capacity": 350, "venueType": "music-venue", "churroWeight": 0.20 },
+    { "id": "pier-head", "name": "Pier Head", "latitude": 53.4058, "longitude": -2.9972, "capacity": 50000, "venueType": "outdoor", "churroWeight": 0.18 },
+    { "id": "st-georges-hall", "name": "St George's Hall", "latitude": 53.4085, "longitude": -2.9801, "capacity": 1500, "venueType": "hall", "churroWeight": 0.15 },
+    { "id": "liverpool-empire-theatre", "name": "Liverpool Empire Theatre", "latitude": 53.4089, "longitude": -2.9783, "capacity": 2348, "venueType": "theatre", "churroWeight": 0.15 }
   ],
   "_meta": {
-    "source": "Public venue capacity data and coordinates",
+    "source": "Venues within ~1.8km walking radius of Baltic Market (53.3934, -2.9851)",
     "lastUpdated": "2025-06-13",
-    "notes": "Capacities are approximate maximum capacities for event purposes"
+    "notes": "echo-arena (duplicate of ms-bank-arena) removed. Sefton Park, Anfield, Goodison, Aintree removed (too far). churroWeight = probability person at venue walks to Baltic Market and buys a churro."
   }
 }

@@ -1,19 +1,19 @@
 {
   "multipliers": {
-    "sunny": 1.15,
-    "clear": 1.15,
-    "partly-cloudy": 1.08,
-    "cloudy": 1.00,
-    "overcast": 0.95,
-    "light-rain": 0.82,
-    "drizzle": 0.85,
-    "rain": 0.72,
-    "heavy-rain": 0.58,
-    "storm": 0.40,
-    "thunderstorm": 0.40,
-    "snow": 0.55,
-    "fog": 0.90,
-    "windy": 0.88
+    "sunny": 0.85,
+    "clear": 0.85,
+    "partly-cloudy": 0.92,
+    "cloudy": 1.05,
+    "overcast": 1.10,
+    "light-rain": 1.15,
+    "drizzle": 1.10,
+    "rain": 1.25,
+    "heavy-rain": 1.00,
+    "storm": 0.30,
+    "thunderstorm": 0.25,
+    "snow": 1.30,
+    "fog": 0.95,
+    "windy": 0.90
   },
   "weatherCodeMap": {
     "0": "clear",
@@ -39,8 +39,8 @@
     "99": "thunderstorm"
   },
   "_meta": {
-    "source": "Evidence-based assumptions on weather impact on outdoor activity and crowds",
+    "source": "Churro-specific weather impact model for Baltic Market Liverpool",
     "lastUpdated": "2025-06-13",
-    "notes": "Weather codes map to Open-Meteo WMO codes. Multipliers based on: sunny weather draws people outdoors (+15%), heavy rain deters attendance (-42%), storms severely limit outdoor activity (-60%). Derived from UK tourism footfall studies and common sense."
+    "notes": "INVERTED from general footfall: rain drives people indoors to covered market + triggers comfort food demand (warm churros). Hot sunny weather suppresses fried dough sales (people buy ice cream). Cold+rain = peak churro weather."
   }
 }

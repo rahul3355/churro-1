@@ -1,39 +1,22 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { generateCalendar } from '../lib/calendar';
+import Link from 'next/link';
 import { loadDefaultLocation } from '../lib/dataLoader';
-import { clearCache } from '../lib/cache';
 import Calendar from '../components/Calendar';
-import type { CalendarResult } from '../lib/calendar';
+import ChurroIcon from '../components/ChurroIcon';
+import type { Location } from '../lib/types';
 
 export default function Home() {
-  const [data, setData] = useState<CalendarResult | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const loadData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const location = loadDefaultLocation();
-      const today = new Date();
-      const result = await generateCalendar(location, today);
-      setData(result);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load calendar data');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [location, setLocation] = useState<Location | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    loadData();
+    setLocation(loadDefaultLocation());
   }, []);
 
   const handleRefresh = () => {
-    clearCache();
-    loadData();
+    setRefreshKey((k) => k + 1);
   };
 
   return (
@@ -41,40 +24,37 @@ export default function Home() {
       <section className="hero-band">
         <div className="container">
           <div className="hero-eyebrow">
-            Liverpool &middot; Crowd Density Forecast
+            Baltic Market, Liverpool
           </div>
-          <h1 className="hero-title">
-            Population Surge Calendar.
-          </h1>
+          <div className="hero-title-group">
+            <ChurroIcon size={48} />
+            <h1 className="hero-title hero-title-hover">
+              Demand Surge Calendar
+            </h1>
+          </div>
           <p className="hero-subtitle">
-            Plan your visit with confidence. See the next 30 days of predicted
-            crowd density across Liverpool, powered by real-time event data,
-            weather forecasts, and seasonal patterns.
+            Predict daily demand at Baltic Market, Liverpool.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary" onClick={handleRefresh}>
-              Refresh Forecast
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-            >
-              View Calendar
-            </button>
+            <Link href="/docs" className="btn-secondary" style={{ minWidth: '160px' }}>
+              How it works
+            </Link>
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          {loading && (
+          <div style={{ textAlign: 'center', marginBottom: 'var(--space-md)' }}>
+            <button onClick={handleRefresh} className="refresh-link">refresh forecast</button>
+          </div>
+          {location && <Calendar location={location} refreshKey={refreshKey} />}
+          {!location && (
             <div className="loading">
               <div className="loading-spinner" />
               <span className="loading-text">Loading forecast data...</span>
             </div>
           )}
-          {error && <div className="error-message">{error}</div>}
-          {data && <Calendar data={data} />}
         </div>
       </section>
     </div>

@@ -1,69 +1,45 @@
 {
   "recurringEvents": [
     {
-      "id": "baltic-market-weekend",
-      "name": "Baltic Market Weekend",
-      "location": "Baltic Market",
-      "venueId": "baltic-market",
-      "recurrenceRule": "weekend-sat-sun",
-      "estimatedAttendance": 2000,
-      "impactScore": 0.15,
+      "id": "baltic-market-weekend", "name": "Baltic Market Weekend", "location": "Baltic Market",
+      "venueId": "baltic-market", "recurrenceRule": "weekend-sat-sun",
+      "estimatedAttendance": 2000, "impactScore": 0.15, "churroImpact": 1.00, "classification": "DIRECT",
       "category": "market"
     },
     {
-      "id": "albert-dock-sunday-market",
-      "name": "Albert Dock Sunday Market",
-      "location": "Royal Albert Dock",
-      "venueId": "royal-albert-dock",
-      "recurrenceRule": "weekly-sunday",
-      "estimatedAttendance": 3000,
-      "impactScore": 0.10,
+      "id": "albert-dock-sunday-market", "name": "Albert Dock Sunday Market", "location": "Royal Albert Dock",
+      "venueId": "royal-albert-dock", "recurrenceRule": "weekly-sunday",
+      "estimatedAttendance": 3000, "impactScore": 0.10, "churroImpact": 0.20, "classification": "NEARBY",
       "category": "market"
     },
     {
-      "id": "liverpool-one-late-night",
-      "name": "Liverpool ONE Late Night Shopping",
-      "location": "Liverpool ONE",
-      "venueId": "liverpool-one",
-      "recurrenceRule": "weekly-thursday",
-      "estimatedAttendance": 10000,
-      "impactScore": 0.15,
+      "id": "liverpool-one-late-night", "name": "Liverpool ONE Late Night Shopping", "location": "Liverpool ONE",
+      "venueId": "liverpool-one", "recurrenceRule": "weekly-thursday",
+      "estimatedAttendance": 10000, "impactScore": 0.15, "churroImpact": 0.25, "classification": "NEARBY",
       "category": "shopping"
     },
     {
-      "id": "bombed-out-church-market",
-      "name": "Bombed Out Church Artisan Market",
-      "location": "St Luke's Church",
-      "venueId": null,
-      "recurrenceRule": "weekly-sunday",
-      "estimatedAttendance": 1500,
-      "impactScore": 0.10,
+      "id": "bombed-out-church-market", "name": "Bombed Out Church Artisan Market", "location": "St Luke's Church",
+      "venueId": null, "recurrenceRule": "weekly-sunday",
+      "estimatedAttendance": 1500, "impactScore": 0.10, "churroImpact": 0.10, "classification": "NEARBY",
       "category": "market"
     },
     {
-      "id": "lark-lane-market",
-      "name": "Lark Lane Farmers Market",
-      "location": "Lark Lane",
-      "venueId": null,
-      "recurrenceRule": "monthly-last-saturday",
-      "estimatedAttendance": 2000,
-      "impactScore": 0.08,
+      "id": "lark-lane-market", "name": "Lark Lane Farmers Market", "location": "Lark Lane",
+      "venueId": null, "recurrenceRule": "monthly-last-saturday",
+      "estimatedAttendance": 2000, "impactScore": 0.08, "churroImpact": 0.00, "classification": "IRRELEVANT",
       "category": "market"
     },
     {
-      "id": "granby-street-market",
-      "name": "Granby Street Market",
-      "location": "Granby Street",
-      "venueId": null,
-      "recurrenceRule": "monthly-first-saturday",
-      "estimatedAttendance": 1000,
-      "impactScore": 0.05,
+      "id": "granby-street-market", "name": "Granby Street Market", "location": "Granby Street",
+      "venueId": null, "recurrenceRule": "monthly-first-saturday",
+      "estimatedAttendance": 1000, "impactScore": 0.05, "churroImpact": 0.02, "classification": "IRRELEVANT",
       "category": "market"
     }
   ],
   "_meta": {
-    "source": "Local knowledge of Liverpool recurring events and markets",
+    "source": "Local Liverpool recurring events — churro-specific classification",
     "lastUpdated": "2025-06-13",
-    "notes": "Recurrence rules use predefined patterns. Impact scores scale relative to city-wide impact (0-1 range, combined additively)."
+    "notes": "classification: DIRECT (Baltic Market itself), NEARBY (walking distance), IRRELEVANT (different neighbourhood). churroImpact reflects actual churro stall customer impact."
   }
 }

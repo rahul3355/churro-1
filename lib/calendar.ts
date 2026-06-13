@@ -1,4 +1,4 @@
-import type { NormalizedEvent } from './types';
+import type { NormalizedEvent, WeatherInfo } from './types';
 import {
   resolveRecurringEvents,
   resolveAnnualEvents,
@@ -6,6 +6,7 @@ import {
   getWeekdayMultiplier,
   getTourismMultiplier,
   loadVenues,
+  isClosedDay,
 } from './dataLoader';
 import { computeCrowdScore } from './scoring';
 import { fetchWeather } from './weather';
@@ -76,12 +77,18 @@ export async function generateCalendar(
     current.setDate(current.getDate() + 1);
   }
 
-  // Fetch weather
-  const weather = await fetchWeather(
+  // Fetch weather by date range — Open-Meteo returns observed+forecast for the window
+  const weatherEntries = await fetchWeather(
     location.latitude,
     location.longitude,
-    30
+    startStr,
+    endStr
   );
+
+  const weatherMap: Record<string, WeatherInfo> = {};
+  for (const w of weatherEntries) {
+    weatherMap[w.date] = w;
+  }
 
   // Build scores
   const scores: DayScore[] = [];
@@ -91,7 +98,7 @@ export async function generateCalendar(
     const dateStr = d.toISOString().split('T')[0];
     const events = dateRangeEvents[dateStr] || [];
     const holidays = getHolidaysForDate(dateStr);
-    const weatherInfo = weather[i] || null;
+    const weatherInfo = weatherMap[dateStr] || null;
     const weekdayMult = getWeekdayMultiplier(d);
     const tourismMult = getTourismMultiplier(d);
 

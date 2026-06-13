@@ -3,7 +3,9 @@ import { getCached, setCache, getCacheKey } from './cache';
 import { getWeatherMultiplier } from './dataLoader';
 
 interface OpenMeteoResponse {
-  daily: {
+  error?: boolean;
+  reason?: string;
+  daily?: {
     time: string[];
     weather_code: number[];
     temperature_2m_max: number[];
@@ -13,40 +15,66 @@ interface OpenMeteoResponse {
 export async function fetchWeather(
   latitude: number,
   longitude: number,
-  days: number = 30
+  startDate: string,
+  endDate: string
 ): Promise<WeatherInfo[]> {
-  const cacheKey = getCacheKey('weather', latitude.toFixed(4), longitude.toFixed(4));
+  const cacheKey = getCacheKey('weather', latitude.toFixed(4), longitude.toFixed(4), startDate, endDate);
   const cached = getCached<WeatherInfo[]>(cacheKey);
 
-  if (cached && cached.length >= days) {
-    return cached.slice(0, days);
+  if (cached && cached.length > 0) {
+    return cached;
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,temperature_2m_max&timezone=Europe/London&forecast_days=${Math.min(days, 16)}`;
+    const url = new URL('https://api.open-meteo.com/v1/forecast');
+    url.searchParams.set('latitude', String(latitude));
+    url.searchParams.set('longitude', String(longitude));
+    url.searchParams.set('daily', 'weather_code,temperature_2m_max');
+    url.searchParams.set('timezone', 'Europe/London');
+    url.searchParams.set('start_date', startDate);
+    url.searchParams.set('end_date', endDate);
 
-    const response = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    let response: Response;
+    try {
+      response = await fetch(url.toString(), { signal: controller.signal });
+    } finally {
+      clearTimeout(timeout);
+    }
+
     if (!response.ok) {
       console.warn('Open-Meteo API returned', response.status);
       return [];
     }
 
     const data: OpenMeteoResponse = await response.json();
+
+    if (data.error || !data.daily) {
+      console.warn('Open-Meteo API error:', data.reason || 'missing daily data');
+      return [];
+    }
+
     const weather: WeatherInfo[] = [];
 
     for (let i = 0; i < data.daily.time.length; i++) {
+      const date = data.daily.time[i];
       const code = data.daily.weather_code[i];
+      const temp = data.daily.temperature_2m_max[i];
+      if (date == null || code == null || temp == null) continue;
       weather.push({
+        date,
         condition: getConditionFromCode(code),
-        temperature: Math.round(data.daily.temperature_2m_max[i]),
+        temperature: Math.round(temp),
         weatherCode: code,
         multiplier: getWeatherMultiplier(code),
         icon: getIconFromCode(code),
       });
     }
 
-    setCache(cacheKey, weather, 3 * 60 * 60 * 1000); // 3 hour TTL
-    return weather.slice(0, days);
+    setCache(cacheKey, weather, 3 * 60 * 60 * 1000);
+    return weather;
   } catch (err) {
     console.warn('Failed to fetch weather:', err);
     return [];
