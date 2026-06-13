@@ -22,6 +22,11 @@ A lightweight demand forecasting tool built for a single churro stall at Baltic 
 
 Food stall operators make two costly mistakes every week: overstaffing slow days (burning cash) and understaffing busy days (leaving money on the counter). This tool replaces gut feel with a real forecast. If you run a stall that sells hot food at a fixed market, the difference between guessing and knowing is margin.
 
+<p align="center">
+  <img src="./public/screenshots/s1.png" alt="Calendar view" width="48%" />
+  <img src="./public/screenshots/s2.png" alt="Day detail modal" width="48%" />
+</p>
+
 ---
 
 ## How it works
