@@ -1,7 +1,8 @@
 import type { NormalizedEvent } from './types';
 import { getCached, setCache, getCacheKey } from './cache';
 
-const TICKETMASTER_API_KEY = '__REDACTED_API_KEY__';
+const TICKETMASTER_API_KEY = process.env.TICKETMASTER_API_KEY;
+
 const BASE_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
 
 interface TMImage {
@@ -141,6 +142,10 @@ export async function fetchTicketmasterEvents(
   startDate?: string,
   endDate?: string
 ): Promise<NormalizedEvent[]> {
+  if (!TICKETMASTER_API_KEY) {
+    console.warn('TICKETMASTER_API_KEY not set — skipping Ticketmaster fetch');
+    return [];
+  }
   const cacheKey = getCacheKey(
     'ticketmaster',
     latitude.toFixed(4),
@@ -205,6 +210,6 @@ export async function fetchTicketmasterEvents(
     }
   }
 
-  setCache(cacheKey, events, 12 * 60 * 60 * 1000); // 12 hour TTL
+  setCache(cacheKey, events);
   return events;
 }

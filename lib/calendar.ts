@@ -122,6 +122,6 @@ export async function generateCalendar(
     location,
   };
 
-  setCache(cacheKey, result, 1 * 60 * 60 * 1000); // 1 hour TTL
+  setCache(cacheKey, result);
   return result;
 }

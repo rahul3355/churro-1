@@ -31,10 +31,15 @@ function getTopMultiplier(score: DayScore): {
 
   const abs = Math.abs(top.impact);
   let variant: 'high' | 'mid' | 'low' | 'neg';
-  if (abs >= 15) variant = 'high';
-  else if (abs >= 8) variant = 'mid';
-  else if (top.impact > 0) variant = 'low';
-  else variant = 'neg';
+  if (top.impact < 0) {
+    variant = 'neg';
+  } else if (abs >= 15) {
+    variant = 'high';
+  } else if (abs >= 8) {
+    variant = 'mid';
+  } else {
+    variant = 'low';
+  }
 
   return {
     label:
@@ -100,7 +105,7 @@ export default function Calendar({ location, refreshKey }: CalendarProps) {
         result = await generateCalendar(location, firstOfMonth);
       }
 
-      setCache(cacheKey, result, 30 * 60 * 1000); // 30 min client-side cache
+      setCache(cacheKey, result);
       setData(result);
     } catch (err) {
       console.warn('Failed to load month', err);

@@ -18,8 +18,7 @@ import type {
 } from '../../../lib/types';
 import type { CalendarResult } from '../../../lib/calendar';
 
-const TICKETMASTER_API_KEY =
-  process.env.TICKETMASTER_API_KEY || '__REDACTED_API_KEY__';
+const TICKETMASTER_API_KEY = process.env.TICKETMASTER_API_KEY || '';
 const TM_BASE_URL = 'https://app.ticketmaster.com/discovery/v2/events.json';
 
 interface TMImage { url: string; width: number; height: number; }
@@ -159,7 +158,7 @@ async function fetchWeatherServer(
   url.searchParams.set('start_date', range.startDate);
   url.searchParams.set('end_date', range.endDate);
 
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), { next: { revalidate: false } });
 
   if (!res.ok) {
     console.warn('Open-Meteo API returned', res.status);
@@ -194,6 +193,7 @@ async function fetchTicketmasterServer(
   startDate: string,
   endDate: string
 ): Promise<NormalizedEvent[]> {
+  if (!TICKETMASTER_API_KEY) return [];
   const events: NormalizedEvent[] = [];
   const pageSize = 50;
 
@@ -217,10 +217,10 @@ async function fetchTicketmasterServer(
     pageUrls.push({ url: `${TM_BASE_URL}?${params.toString()}`, page });
   }
 
-  // Fetch all pages in parallel (edge-cached: 12 hour TTL per page URL)
+  // Fetch all pages in parallel (cached indefinitely)
   const responses = await Promise.all(
     pageUrls.map(({ url }) =>
-      fetch(url, { next: { revalidate: 43200 } })
+      fetch(url, { next: { revalidate: false } })
     )
   );
 
@@ -365,7 +365,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result, {
       headers: {
-        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=300',
+        'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
   } catch (err) {

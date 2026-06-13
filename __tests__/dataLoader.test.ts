@@ -157,10 +157,13 @@ describe('Data Loader', () => {
     expect(windrush[0].name).toBe('Windrush Day');
   });
 
-  test('isClosedDay returns true for Mon-Wed', () => {
+  test('isClosedDay returns true for Mon-Tue', () => {
     expect(isClosedDay(new Date('2025-06-16'))).toBe(true); // Monday
     expect(isClosedDay(new Date('2025-06-17'))).toBe(true); // Tuesday
-    expect(isClosedDay(new Date('2025-06-18'))).toBe(true); // Wednesday
+  });
+
+  test('isClosedDay returns false for Wednesday', () => {
+    expect(isClosedDay(new Date('2025-06-18'))).toBe(false); // Wednesday
   });
 
   test('isClosedDay returns false for Thu-Sun', () => {

@@ -33,6 +33,22 @@ describe('Scoring Engine', () => {
     expect(result.level).toBe('Closed');
   });
 
+  test('returns non-zero score for Wednesday (operating day)', () => {
+    const input: ScoreInput = {
+      date: new Date('2025-07-09'), // Wednesday
+      location: balticMarket,
+      events: [],
+      weather: { date: '2025-07-09', condition: 'Cloudy', temperature: 15, weatherCode: 3, multiplier: 1.05, icon: 'cloud' },
+      holidays: [],
+      tourismMultiplier: 1.38,
+      weekdayMultiplier: 0.55,
+      venues: [],
+    };
+    const result = computeCrowdScore(input);
+    expect(result.score).toBeGreaterThan(0);
+    expect(result.level).not.toBe('Closed');
+  });
+
   test('returns Quiet on a Thursday with no events and bad weather', () => {
     const input: ScoreInput = {
       date: new Date('2025-01-16'), // Thursday
@@ -152,7 +168,7 @@ describe('Scoring Engine', () => {
     const result = computeCrowdScore(input);
     // Note: Monday is a non-operating day by default, so unless the operating gate
     // is overridden for holidays, this will be Closed.
-    // The current operating gate closes Mon-Wed regardless of holidays.
+    // The current operating gate closes Mon-Tue regardless of holidays.
     // A bank holiday Monday would need special handling to be open.
     // This test verifies the current behavior.
     expect(result.score).toBe(0);

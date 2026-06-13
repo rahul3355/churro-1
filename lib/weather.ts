@@ -96,7 +96,7 @@ export async function fetchWeather(
       });
     }
 
-    setCache(cacheKey, weather, 3 * 60 * 60 * 1000);
+    setCache(cacheKey, weather);
     return weather;
   } catch (err) {
     console.warn('Failed to fetch weather:', err);

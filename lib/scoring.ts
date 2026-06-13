@@ -76,8 +76,8 @@ function categoryRelevance(category: string): number {
 // ============================================================================
 function isOperating(date: Date, holidays: Holiday[]): boolean {
   const dow = date.getDay(); // 0=Sun, 4=Thu, 5=Fri, 6=Sat
-  // Closed Mon (1), Tue (2), Wed (3)
-  if (dow === 1 || dow === 2 || dow === 3) return false;
+  // Closed Mon (1), Tue (2)
+  if (dow === 1 || dow === 2) return false;
 
   // Check for forced closure holidays
   for (const h of holidays) {
@@ -144,7 +144,8 @@ function churroTourismMultiplier(rawTourismMult: number): number {
 // ============================================================================
 function churroDayMultiplier(dayOfWeek: number): number {
   const map: Record<number, number> = {
-    4: 0.55,    // Thursday: evening-only
+    3: 0.55,    // Wednesday: same hours as Thursday
+    4: 0.55,    // Thursday
     5: 0.80,    // Friday: heavy evening trade
     6: 1.30,    // Saturday: full day peak
     0: 0.95,    // Sunday: full day, gentler close
@@ -243,7 +244,7 @@ export function computeCrowdScore(input: ScoreInput): DayScore {
       scoreRange: [0, 0],
       contributingFactors: [{
         name: 'Market Closed',
-        description: 'Baltic Market is not operating today (Mon-Wed or major holiday closure)',
+        description: 'Baltic Market is not operating today (Mon-Tue or major holiday closure)',
         impact: 0,
       }],
       weather: input.weather,

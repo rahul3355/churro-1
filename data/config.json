@@ -9,9 +9,10 @@
     "application": "Churro Sales Forecaster — Baltic Market Liverpool",
     "version": "2.0.0",
     "stallName": "Churro Stall",
-    "operatingDays": [4, 5, 6, 0],
+    "operatingDays": [3, 4, 5, 6, 0],
     "operatingHours": {
-      "thursday":  { "open": "17:00", "close": "23:00" },
+      "wednesday": { "open": "12:00", "close": "22:00" },
+"thursday":  { "open": "12:00", "close": "22:00" },
       "friday":    { "open": "17:00", "close": "23:00" },
       "saturday":  { "open": "12:00", "close": "23:00" },
       "sunday":    { "open": "12:00", "close": "21:00" }

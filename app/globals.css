@@ -58,15 +58,15 @@
   --level-steady-bg: #fffcf0;
   --level-steady-text: #ab570a;
   --level-steady-border: #ffefcf;
-  --level-busy-bg: #fef5f5;
-  --level-busy-text: #c50000;
-  --level-busy-border: #f7d4d6;
-  --level-very-busy-bg: #fff0f0;
-  --level-very-busy-text: #cc0000;
-  --level-very-busy-border: #f5b8b8;
-  --level-crush-bg: #f9f6fc;
-  --level-crush-text: #4c2889;
-  --level-crush-border: #d8ccf1;
+  --level-busy-bg: #fff1ee;
+  --level-busy-text: #d9381e;
+  --level-busy-border: #fdd2c9;
+  --level-very-busy-bg: #ffe0d8;
+  --level-very-busy-text: #c22d14;
+  --level-very-busy-border: #fcb3a1;
+  --level-crush-bg: #ffd1c8;
+  --level-crush-text: #aa1f09;
+  --level-crush-border: #fb9280;
 
   /* Typography — Font Families (set by next/font via layout.tsx, with var() fallbacks) */
 
@@ -723,10 +723,10 @@ body {
 
 @keyframes crush-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(120, 40, 200, 0.12);
+    box-shadow: 0 0 0 0 rgba(170, 31, 9, 0.12);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(120, 40, 200, 0.06);
+    box-shadow: 0 0 0 4px rgba(170, 31, 9, 0.06);
   }
 }
 

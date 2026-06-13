@@ -300,8 +300,8 @@ export function getHolidaysForDate(dateStr: string): Holiday[] {
 
 export function isClosedDay(date: Date): boolean {
   const dow = date.getDay();
-  // Baltic Market closed Mon (1), Tue (2), Wed (3)
-  if (dow === 1 || dow === 2 || dow === 3) return true;
+  // Baltic Market closed Mon (1), Tue (2)
+  if (dow === 1 || dow === 2) return true;
   const dateStr = date.toISOString().split('T')[0];
   // Check against known closure dates
   const knownClosures = ['2025-12-25', '2026-12-25'];

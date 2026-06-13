@@ -2,15 +2,15 @@
   "multipliers": {
     "monday": 0.03,
     "tuesday": 0.03,
-    "wednesday": 0.05,
+    "wednesday": 0.55,
     "thursday": 0.55,
     "friday": 0.80,
     "saturday": 1.30,
     "sunday": 0.95
   },
   "_meta": {
-    "source": "Baltic Market Liverpool operating patterns (Thu-Sun)",
+    "source": "Baltic Market Liverpool operating patterns (Wed-Sun)",
     "lastUpdated": "2025-06-13",
-    "notes": "Baltic Market is closed Mon-Wed (near-zero multipliers). Thu evening-only trade (0.55). Fri heavy evening (0.80). Sat full-day peak (1.30). Sun full-day gentler (0.95). These replace general UK high-street footfall multipliers."
+    "notes": "Baltic Market is closed Mon-Tue (near-zero multipliers). Wed-Thu evening-only trade (0.55). Fri heavy evening (0.80). Sat full-day peak (1.30). Sun full-day gentler (0.95). These replace general UK high-street footfall multipliers."
   }
 }

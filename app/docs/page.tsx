@@ -244,16 +244,16 @@ W = clamp(T' × P × H, 0.30, 1.40)`}</PythonBlock>
           </Section>
 
           <Section id="day-of-week" num={3} title="Day of Week">
-            <p>Baltic Market operates Thursday through Sunday. The day-of-week multiplier reflects actual trading patterns rather than general high street footfall.</p>
+            <p>Baltic Market operates Wednesday through Sunday. The day-of-week multiplier reflects actual trading patterns rather than general high street footfall.</p>
             <HighlightBox>
-              <strong>Example.</strong> A Saturday gets 1.30x (full day peak trading, lunch through evening). A Thursday gets 0.55x (evening-only service). Monday, Tuesday, and Wednesday are non-operating days and return a score of zero with a "Closed" level regardless of other factors.
+              <strong>Example.</strong> A Saturday gets 1.30x (full day peak trading, lunch through evening). A Thursday gets 0.55x (evening-only service). Monday and Tuesday are non-operating days and return a score of zero with a "Closed" level regardless of other factors.
             </HighlightBox>
             <h3>How it works</h3>
-            <p>The scoring engine first checks if Baltic Market is open on a given day. Monday through Wednesday always return a score of 0. For operating days, the multiplier is applied to the base score: Thursday 0.55x, Friday 0.80x, Saturday 1.30x, Sunday 0.95x. The Saturday peak reflects all-day service with lunch, afternoon snack, and evening dinner windows.</p>
+            <p>The scoring engine first checks if Baltic Market is open on a given day. Monday and Tuesday always return a score of 0. For operating days, the multiplier is applied to the base score: Wednesday 0.55x, Thursday 0.55x, Friday 0.80x, Saturday 1.30x, Sunday 0.95x. The Saturday peak reflects all-day service with lunch, afternoon snack, and evening dinner windows.</p>
             <h3>Assumptions</h3>
             <ol className="docs-assumptions">
-              <li>Baltic Market operating hours: Thu-Fri 5pm through 11pm, Sat 12pm through 11pm, Sun 12pm through 9pm.</li>
-              <li>Monday through Wednesday are always closed with no exceptions.</li>
+              <li>Baltic Market operating hours: Wed-Fri 5pm through 11pm, Sat 12pm through 11pm, Sun 12pm through 9pm.</li>
+              <li>Monday and Tuesday are always closed with no exceptions.</li>
               <li>Bank holiday Mondays currently also score 0, which is a known future improvement area.</li>
               <li>The multipliers are calibrated against food vendor revenue patterns, not general footfall.</li>
               <li>Friday gets 0.80x despite being evening-only because weekend anticipation drives higher per-hour spend.</li>
@@ -262,10 +262,11 @@ W = clamp(T' × P × H, 0.30, 1.40)`}</PythonBlock>
             <PythonBlock>{`D = lookup[dow]
 
   Sunday    = 0.95
+  Wednesday = 0.55
   Thursday  = 0.55
   Friday    = 0.80
   Saturday  = 1.30
-  Mon-Wed   = 0`}</PythonBlock>
+  Mon-Tue   = 0`}</PythonBlock>
           </Section>
 
           <Section id="tourism" num={4} title="Tourism Seasonality">
