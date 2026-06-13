@@ -4,7 +4,7 @@ import { useState } from 'react';
 import type { CalendarResult } from '../lib/calendar';
 import DayModal from './DayModal';
 
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const DAY_NAMES = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
@@ -27,55 +27,82 @@ export default function Calendar({ data }: { data: CalendarResult }) {
 
   const firstDay = startDate.getDay();
 
+  const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setSelectedIndex(index);
+    }
+  };
+
   return (
     <div>
-      <h2 style={{ textAlign: 'center', marginTop: 8, fontSize: '1rem', color: '#94a3b8' }}>
-        {dateLabel}
-      </h2>
+      <div className="calendar-card">
+        <div className="calendar-month-label">{dateLabel.toLowerCase()}</div>
 
-      <div className="calendar-grid">
-        {DAY_NAMES.map((d) => (
-          <div key={d} className="calendar-day-header">{d}</div>
-        ))}
-
-        {Array.from({ length: firstDay }).map((_, i) => (
-          <div key={`empty-${i}`} className="calendar-day empty" />
-        ))}
-
-        {scores.map((score, i) => {
-          const d = new Date(score.date + 'T00:00:00');
-          const dayNum = d.getDate();
-          const levelClass = `level-${score.level.toLowerCase()}`;
-
-          return (
-            <div
-              key={score.date}
-              className={`calendar-day ${levelClass}`}
-              onClick={() => setSelectedIndex(i)}
-            >
-              <span className="day-num">{dayNum}</span>
-              <span className="day-score">{score.score}</span>
+        <div className="calendar-grid" role="grid" aria-label="30-day crowd forecast calendar">
+          {DAY_NAMES.map((d) => (
+            <div key={d} className="calendar-day-header" role="columnheader">
+              {d}
             </div>
-          );
-        })}
-      </div>
+          ))}
 
-      <div className="legend">
-        <div className="legend-item">
-          <div className="legend-dot" style={{ background: '#166534' }} />
-          Low (0-29)
+          {Array.from({ length: firstDay }).map((_, i) => (
+            <div key={`empty-${i}`} className="calendar-day empty" aria-hidden="true" />
+          ))}
+
+          {scores.map((score, i) => {
+            const d = new Date(score.date + 'T00:00:00');
+            const dayNum = d.getDate();
+            const isToday = new Date().toISOString().split('T')[0] === score.date;
+
+            return (
+              <div
+                key={score.date}
+                className={`calendar-day level-${score.level.toLowerCase()}${isToday ? ' today' : ''}`}
+                role="gridcell"
+                tabIndex={0}
+                aria-label={`${score.level} crowd level, score ${score.score}, ${dayNum} ${MONTH_NAMES[d.getMonth()]}`}
+                onClick={() => setSelectedIndex(i)}
+                onKeyDown={(e) => handleKeyDown(e, i)}
+              >
+                {isToday && (
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: 2,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: 4,
+                      height: 4,
+                      borderRadius: '50%',
+                      background: 'var(--primary)',
+                    }}
+                  />
+                )}
+                <span className="day-num">{dayNum}</span>
+                <span className="day-score">{score.score}</span>
+              </div>
+            );
+          })}
         </div>
-        <div className="legend-item">
-          <div className="legend-dot" style={{ background: '#854d0e' }} />
-          Moderate (30-59)
-        </div>
-        <div className="legend-item">
-          <div className="legend-dot" style={{ background: '#991b1b' }} />
-          High (60-79)
-        </div>
-        <div className="legend-item">
-          <div className="legend-dot" style={{ background: '#4c1d95' }} />
-          Extreme (80-100)
+
+        <div className="legend">
+          <div className="legend-item">
+            <div className="legend-dot" style={{ background: 'var(--level-low-text)' }} />
+            Low (0-29)
+          </div>
+          <div className="legend-item">
+            <div className="legend-dot" style={{ background: 'var(--level-moderate-text)' }} />
+            Moderate (30-59)
+          </div>
+          <div className="legend-item">
+            <div className="legend-dot" style={{ background: 'var(--level-high-text)' }} />
+            High (60-79)
+          </div>
+          <div className="legend-item">
+            <div className="legend-dot" style={{ background: 'var(--level-extreme-text)' }} />
+            Extreme (80-100)
+          </div>
         </div>
       </div>
 

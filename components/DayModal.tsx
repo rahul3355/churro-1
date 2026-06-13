@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useCallback } from 'react';
 import type { DayScore } from '../lib/types';
 
 const WEEKDAYS = [
@@ -21,82 +22,122 @@ export default function DayModal({
   const dayName = WEEKDAYS[d.getDay()];
   const monthName = MONTHS[d.getMonth()];
   const dateLabel = `${dayName} ${monthName} ${d.getDate()}`;
+  const isoDate = score.date;
 
   const levelClass = score.level.toLowerCase();
 
-  return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
-        <h2>{dateLabel}</h2>
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
 
-        <div style={{ textAlign: 'center' }}>
-          <div className={`score-badge ${levelClass}`}>{score.score}</div>
-          <div style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: 4 }}>
-            {score.level} Crowd Level
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Details for ${dateLabel}`}
+    >
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <div>
+            <div className="modal-date">{dateLabel}</div>
+            <span className="modal-date-mono">{isoDate}</span>
+          </div>
+          <button
+            className="modal-close-btn"
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            &times;
+          </button>
+        </div>
+
+        <div className={`modal-score-hero ${levelClass}`}>
+          <div className="modal-score-value">{score.score}</div>
+          <div>
+            <div className="modal-score-label">out of 100</div>
+            <div className="modal-score-level">
+              {score.level} crowd level
+            </div>
           </div>
         </div>
 
         {score.weather && (
-          <>
-            <div className="section-title">Weather</div>
+          <div className="modal-section">
+            <div className="modal-section-title">weather</div>
             <div className="weather-info">
               <span>{score.weather.condition}</span>
-              <span>{score.weather.temperature}°C</span>
-              <span style={{ color: '#94a3b8' }}>
-                ({score.weather.multiplier}x)
+              <span>{score.weather.temperature}&deg;C</span>
+              <span className="weather-meta">
+                {score.weather.multiplier}x
               </span>
             </div>
-          </>
+          </div>
         )}
 
         {(score.events.length > 0 || score.holidays.length > 0) && (
-          <>
-            <div className="section-title">Events & Holidays</div>
-            <ul className="factors-list">
+          <div className="modal-section">
+            <div className="modal-section-title">events & holidays</div>
+            <div>
               {score.events.map((evt) => (
-                <li key={evt.id}>
-                  <strong>{evt.title}</strong>
-                  <br />
-                  <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
+                <div key={evt.id} className="modal-event-item">
+                  <div className="modal-event-name">{evt.title}</div>
+                  <div className="modal-event-meta">
                     {evt.venue} &middot; ~{evt.estimatedAttendance.toLocaleString()} attendees
                     &middot; {evt.category}
-                  </span>
-                </li>
+                  </div>
+                </div>
               ))}
               {score.holidays.map((h) => (
-                <li key={h.date + h.name}>
-                  <strong>{h.name}</strong>
-                  <br />
-                  <span style={{ color: '#94a3b8', fontSize: '0.8rem' }}>
-                    {h.type}
+                <div key={h.date + h.name} className="modal-event-item">
+                  <div className="modal-event-name">{h.name}</div>
+                  <div className="modal-event-meta">{h.type}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="modal-section">
+          <div className="modal-section-title">score breakdown</div>
+          <ul className="factors-list">
+            {score.contributingFactors
+              .filter((f) => f.impact !== 0)
+              .map((f, i) => (
+                <li key={i}>
+                  <span className="factor-desc">{f.description}</span>
+                  <span
+                    className={`factor-impact ${
+                      f.impact > 0 ? 'positive' : f.impact < 0 ? 'negative' : 'neutral'
+                    }`}
+                  >
+                    {f.impact > 0 ? '+' : ''}{f.impact}
                   </span>
                 </li>
               ))}
-            </ul>
-          </>
-        )}
+          </ul>
+        </div>
 
-        <div className="section-title">Score Breakdown</div>
-        <ul className="factors-list">
-          {score.contributingFactors
-            .filter((f) => f.impact !== 0)
-            .map((f, i) => (
-              <li key={i}>
-                <span>{f.description}</span>
-                <span
-                  className={`factor-impact ${
-                    f.impact > 0 ? 'positive' : f.impact < 0 ? 'negative' : 'neutral'
-                  }`}
-                >
-                  {f.impact > 0 ? '+' : ''}{f.impact}
-                </span>
-              </li>
-            ))}
-        </ul>
-
-        <button className="modal-close" onClick={onClose}>
-          Close
-        </button>
+        <div className="modal-footer">
+          <button className="btn-primary-sm" onClick={onClose}>
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );

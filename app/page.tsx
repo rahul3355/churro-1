@@ -37,32 +37,46 @@ export default function Home() {
   };
 
   return (
-    <div className="container">
-      <div className="header">
-        <h1>Population Surge Calendar</h1>
-        <p>
-          Liverpool &middot; Next 30 Days &middot; Crowd Density Forecast
-        </p>
-        <button
-          onClick={handleRefresh}
-          style={{
-            marginTop: 12,
-            padding: '6px 16px',
-            background: '#334155',
-            color: '#e2e8f0',
-            border: 'none',
-            borderRadius: 6,
-            cursor: 'pointer',
-            fontSize: '0.8rem',
-          }}
-        >
-          Refresh Data
-        </button>
-      </div>
+    <div>
+      <section className="hero-band">
+        <div className="container">
+          <div className="hero-eyebrow">
+            Liverpool &middot; Crowd Density Forecast
+          </div>
+          <h1 className="hero-title">
+            Population Surge Calendar.
+          </h1>
+          <p className="hero-subtitle">
+            Plan your visit with confidence. See the next 30 days of predicted
+            crowd density across Liverpool, powered by real-time event data,
+            weather forecasts, and seasonal patterns.
+          </p>
+          <div className="hero-actions">
+            <button className="btn-primary" onClick={handleRefresh}>
+              Refresh Forecast
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+            >
+              View Calendar
+            </button>
+          </div>
+        </div>
+      </section>
 
-      {loading && <div className="loading">Loading calendar data...</div>}
-      {error && <div className="error-message">{error}</div>}
-      {data && <Calendar data={data} />}
+      <section className="section">
+        <div className="container">
+          {loading && (
+            <div className="loading">
+              <div className="loading-spinner" />
+              <span className="loading-text">Loading forecast data...</span>
+            </div>
+          )}
+          {error && <div className="error-message">{error}</div>}
+          {data && <Calendar data={data} />}
+        </div>
+      </section>
     </div>
   );
 }
